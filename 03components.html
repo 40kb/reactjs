@@ -1,0 +1,116 @@
+<div id="root"></div>
+
+<script src="./react.development.js"></script>
+<script src="./react-dom.development.js"></script>
+<script src="./babel-standalone.js"></script>
+<script type="text/babel">
+  const rootElement = document.getElementById('root')
+
+  // const element = (
+  //   <div className="container">
+  //     <div>Hello World</div>
+  //   </div>
+  // )
+
+  // 我想多创建几个 component:  <div> Hello World</div>
+  // 但我不想像下面这样hardcode，DRY
+  // const element = (
+  //   <div className="container">
+  //     <div>Hello World</div>
+  //     <div>Hello World</div>
+  //     <div>Hello World</div>
+  //   </div>
+  // )
+
+
+  // 我们去创建一个变量
+  // const HelloWorld = <div>Hello World</div>
+  // const element = (
+  //   <div className="container">
+  //     {HelloWorld}
+  //     {HelloWorld}
+  //   </div>
+  // )
+
+  // 如果我想要 一句 Hello World, 一句 Goodbye World 呢
+  // const message = props => <div>{props.msg}</div>
+  // const element = (
+  //   <div className="container">
+  //     {message({msg: 'Hello World'})}
+  //     {message({msg: 'Goodbye World'})}
+  //   </div>
+  // )
+
+
+  // 在JSX里面做 function call 不是很好处理
+  // 我们把它转换成 using React.createElement()
+  // const message = props => <div>{props.msg}</div>
+  // const element = (
+  //   <div className="container">
+  //     { /* <message /> 浏览器是把它渲染出来了，但是不认识它，通过 babel 看一下它会被转换成什么样 */ }
+  //     {React.createElement(message, {msg: 'Hello World'})}
+  //     {React.createElement(message, {msg: 'Goodbye World'})}
+  //   </div>
+  // )
+
+  // 通过babel（https://babeljs.io/en/repl.html）看下会转成什么样
+  // <message />
+  // 会转成下面的语句
+  // React.createElement("message", null);  // 这里 "message" 需要注意，
+  // JSX在处理的时候component的首个字母要大写，才会refer to variable.
+  // 所以要变成 <Message />
+  //
+  // 再看看下面会被转成什么样
+  // const message = props => <div>{props.msg}</div>;
+  // 会转成成
+  // var message = function message(props) {
+  //   return React.createElement(
+  //     "div",
+  //     null,
+  //     props.msg
+  //   );
+  // };
+
+
+  // 我们知道上面的转换关系之后，我们改成下面这样（就得到了React组件）
+  // const Message = props => <div>{props.msg}</div>
+  // const element = (
+  //   <div className="container">
+  //     <Message msg="Hello World" />
+  //     <Message msg="Goodbye World" />
+  //   </div>
+  // )
+
+
+  // 接着可以把 msg props 变成 children props
+  // const Message = props => <div>{props.children}</div>
+  // const element = (
+  //   <div className="container">
+  //     <Message children="Hello World" />
+  //     <Message children="Goodbye World" />
+  //   </div>
+  // )
+
+
+  // 如果是 children props 我们可以写成这样：(这就得到了我们的 React Component)
+  const Message = props => <div>{props.msg}</div>
+  const element = (
+    <div className="container">
+      <Message>
+        Hello World
+      </Message>
+      <Message>
+        Goodbye World
+      </Message>
+    </div>
+  )
+
+  // 我们写的组件别人在用的时候可能不知道某个prop接受什么类型的数据，或者是否为必传
+  // 我们可以做 propTypes 的校验
+  // Validate Custom React Component Props with PropTypes
+  // https://egghead.io/lessons/react-validate-custom-react-component-props-with-proptypes
+  // https://www.npmjs.com/package/prop-types
+
+  console.log(element)
+  ReactDOM.render(element, rootElement)
+</script>

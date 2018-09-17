@@ -1,0 +1,118 @@
+<div id="root"></div>
+
+<script src="./react.development.js"></script>
+<script src="./react-dom.development.js"></script>
+<script src="./babel-standalone.js"></script>
+<script type="text/babel">
+  const state = {eventCount: 0, username: ''}
+
+  function App() {
+    return (
+      <div>
+        <p> There have been {state.eventCount} events </p>
+        <p> <button>+</button> </p>
+        <p> You typed: {state.username} </p>
+        <p> <input /> </p>
+      </div>
+    )
+  }
+
+  function setState(newState) {
+    Object.assign(state, newState)
+    renderApp()
+  }
+
+  function renderApp() {
+    ReactDOM.render(
+      <App />,
+      document.getElementById('root')
+    )
+  }
+  renderApp()
+
+  // use setState()
+  setState({username: 'bob'})
+  setState({eventCount: 10})
+
+
+  // 现在要点一下button来记录一次event
+  function App() {
+    return (
+      <div>
+        <p> There have been {state.eventCount} events </p>
+        <p> <button onClick={() => setState({ eventCount: state.eventCount + 1})}>+</button> </p>
+        <p> You typed: {state.username} </p>
+        <p> <input /> </p>
+      </div>
+    )
+  }
+
+
+  // 简单event handle function 写在JSX里是没关系的，比较复杂一点的就会有问题
+  // 所以我们extract event handle function
+  function increment() {
+    setState({ eventCount: state.eventCount + 1})
+  }
+
+  function App() {
+    return (
+      <div>
+        <p> There have been {state.eventCount} events </p>
+        <p> <button onClick={increment}>+</button> </p>
+        <p> You typed: {state.username} </p>
+        <p> <input /> </p>
+      </div>
+    )
+  }
+
+  // 处理 onClick event, 还有很多 events ...
+  // 同样的方式，现在我们处理 input 的 onChange event (当然处理 onChange, 还有很多其它的events)
+  function App() {
+    return (
+      <div>
+        <p> There have been {state.eventCount} events </p>
+        <p> <button onClick={increment}>+</button> </p>
+        <p> You typed: {state.username} </p>
+        <p> <input onChange={(event) => setState({ username: event.target.value })}/> </p>
+      </div>
+    )
+  }
+
+
+  // we can also pop this(onChange event handle) out as 'updateUsername' method
+  function updateUsername(event) {
+    setState({ username: event.target.value })
+  }
+  function App() {
+    return (
+      <div>
+        <p> There have been {state.eventCount} events </p>
+        <p> <button onClick={increment}>+</button> </p>
+        <p> You typed: {state.username} </p>
+        <p> <input onChange={updateUsername}/> </p>
+      </div>
+    )
+  }
+
+
+  // 我们看一下 event object
+  function updateUsername(event) {
+    console.log(event) // you will get a proxy event
+    console.log(event.nativeEvent) // you will get origin/acture event (通常你不需要它)
+
+    setState({ username: event.target.value })
+  }
+  function App() {
+    return (
+      <div>
+        <p> There have been {state.eventCount} events </p>
+        <p> <button onClick={increment}>+</button> </p>
+        <p> You typed: {state.username} </p>
+        <p> <input onChange={updateUsername}/> </p>
+      </div>
+    )
+  }
+
+
+
+</script>

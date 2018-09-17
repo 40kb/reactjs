@@ -1,0 +1,184 @@
+<div id="root"></div>
+
+<script src="./react.development.js"></script>
+<script src="./react-dom.development.js"></script>
+<script src="./babel-standalone.js"></script>
+<script type="text/babel">
+  // class Counter extends React.Component {
+  //   constructor(...args) {
+  //     super(...args)
+  //     this.state = {count: 0}
+  //   }
+
+  //   handleClick() {
+  //     this.setState(({count}) => ({
+  //       count: count + 1
+  //     }))
+  //   }
+
+  //   render() {
+  //     return (
+  //       <button onClick={this.handleClick}>
+  //         {this.state.count}
+  //       </button>
+  //     )
+  //   }
+  // }
+  // var element = <Counter />
+
+
+
+  // 上面的代码会报错，因为上面代码中：
+  // handleClick() {
+  //   this.setState(({count}) => ({  // 这里的this 并没有指向 Counter
+  //     count: count + 1
+  //   }))
+  // }
+  //
+  // 在JS中也经常会遇到，例如：
+  // var bob = {
+  //   name: 'Bob',
+  //   greet(name) {
+  //     return `Hi ${name}, my name is ${this.name}!`
+  //   }
+  // }
+
+  // bob.greet('Jane') // 'Hi Jane, my name is Bob!'
+
+  // // 你把 bob.greet 赋给一个变量
+  // var greetFn = bob.greet
+
+  // // 执行 greetFn （这个时候 bob.greet 里面的 this 指向的不再是 bob object)
+  // greetFn('Jane') // Hi Jane, my name is !
+
+  // // 常见的做法是使用 bind() 来告诉 this 应该指向谁
+  // var greetFn = bob.greet.bind(bob)
+
+  // // 你再执行
+  // greetFn('Jane') // Hi Jane, my name is Bob!
+
+
+
+  // 所以，同样的道理我们可以绝交上面上面代码报错的问题
+  // class Counter extends React.Component {
+  //   constructor(...args) {
+  //     super(...args)
+  //     this.state = {count: 0}
+  //   }
+
+  //   handleClick() {
+  //     this.setState(({count}) => ({
+  //       count: count + 1
+  //     }))
+  //   }
+
+  //   render() {
+  //     return (
+  //       <button onClick={this.handleClick.bind(this)}>
+  //         {this.state.count}
+  //       </button>
+  //     )
+  //   }
+  // }
+  // var element = <Counter />
+
+
+
+  // 但是每次都用 bind() 的话也比较烦人~ 并且在 JSX 里面使用 bind() 也会有性能问题，避免这样用！
+  // 我们可以改成这样：
+  // class Counter extends React.Component {
+  //   constructor(...args) {
+  //     super(...args)
+  //     this.state = {count: 0}
+  //     this.handleClick = this.handleClick.bind(this)
+  //   }
+
+  //   handleClick() {
+  //     this.setState(({count}) => ({
+  //       count: count + 1
+  //     }))
+  //   }
+
+  //   render() {
+  //     return (
+  //       <button onClick={this.handleClick}>
+  //         {this.state.count}
+  //       </button>
+  //     )
+  //   }
+  // }
+  // var element = <Counter />
+
+
+
+  // 上面虽然解决了性能的问题，但是还是比较烦人
+  // 如果你有很多 methods 的时候，你的 constructor() 里会有很多像：
+  // this.handleClick = this.handleClick.bind(this)
+  // this.handleClickB = this.handleClickB.bind(this)
+  // this.handleClickC = this.handleClickC.bind(this)
+  // 所以你可以使用 public class filed
+  // class Counter extends React.Component {
+  //   // 对了，下面的 constructor 和 default constructor 一模一样，你可以移除掉
+  //   constructor(...args) {
+  //     super(...args)
+  //   }
+
+  //   state = {count: 0}
+  //   handleClick = this.handleClick.bind(this)
+
+  //   handleClick() {
+  //     this.setState(({count}) => ({
+  //       count: count + 1
+  //     }))
+  //   }
+
+  //   render() {
+  //     return (
+  //       <button onClick={this.handleClick}>
+  //         {this.state.count}
+  //       </button>
+  //     )
+  //   }
+  // }
+  // var element = <Counter />
+
+
+
+  // 使用 public class filed 之后，可以移除掉 constructor() 因为
+  // constructor(...args) {
+  //   super(...args)
+  // }
+  // 和默认的 constructor 一模一样，所以可以不写！
+  //
+  // 我们还可以进行进一步的优化
+  class Counter extends React.Component {
+    state = {count: 0}
+
+    // handleClick = this.handleClick.bind(this)
+    // handleClick = function() {
+    //   this.setState(({count}) => ({
+    //     count: count + 1
+    //   }))
+    // }.bind(this)
+
+    // 但是每次使用 bind(this) 还是很烦人！我们可以使用 arrow function
+    handleClick = () => {
+      this.setState(({count}) => ({
+        count: count + 1
+      }))
+    }
+
+    render() {
+      return (
+        <button onClick={this.handleClick}>
+          {this.state.count}
+        </button>
+      )
+    }
+  }
+  var element = <Counter />
+
+
+
+  ReactDOM.render(element, document.getElementById('root'))
+</script>

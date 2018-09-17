@@ -1,0 +1,63 @@
+<div id="root"></div>
+
+<script src="./react.development.js"></script>
+<script src="./react-dom.development.js"></script>
+<script src="./babel-standalone.js"></script>
+<script type="text/babel">
+  const rootElement = document.getElementById('root')
+
+  function Message({message}) {
+    if (!message) {
+      return <div>No Message</div>
+    }
+
+    return <div>{message}</div>
+  }
+
+  // JSX just simply abstraction of `React.createElement()` API
+  // 把上面的 Message fn 变成 React.createElement() 的方式
+  function Message({message}) {
+    if (!message) {
+      return React.createElement('div', null, 'No Message')
+    }
+
+    return React.createElement('div', null, message)
+  }
+
+
+  // 我们可以用 ternary expression 改写成：
+  function Message({message}) {
+    return message
+      ? React.createElement('div', null, message)
+      : React.createElement('div', null, 'No Message')
+  }
+
+  // 你也可以把它 wrap in another <div>
+  function Message({message}) {
+    // if you want wrap in another <div>, you must use {}
+    // and very often in reactjs code `render` method you will see ternary
+    // because { only expression in here }!!!
+    return <div>{
+      message
+        ? React.createElement('div', null, message)
+        : React.createElement('div', null, 'No Message')
+    }</div>
+  }
+
+
+  // OK 我们换成 JSX
+  function Message({message}) {
+    return <div>{
+      message
+        ? <div>{message}</div> // React.createElement('div', null, message)
+        : <div>No Message</div> // React.createElement('div', null, 'No Message')
+    }</div>
+  }
+
+
+  ReactDOM.render(
+    <Message message={'hi there again'} />,
+    document.getElementById('root')
+  )
+
+</script>

@@ -1,0 +1,61 @@
+<div id="root"></div>
+
+<script src="./react.development.js"></script>
+<script src="./react-dom.development.js"></script>
+<script src="./babel-standalone.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.4.1/vanilla-tilt.babel.js"></script>
+<style>
+  .tilt-root {
+    width: 180px;
+    height: 180px;
+    background: red;
+  }
+
+  .tilt-child {
+    width: 60px;
+    height: 60px;
+    background: blue;
+  }
+</style>
+<script type="text/babel">
+  class Tilt extends React.Component {
+    componentDidMount() {
+      VanillaTilt.init(this.rootNode, {
+        max: 25,
+        speed: 400,
+        glare: true,
+        'max-glare': 0.5
+      })
+
+      console.log(this.rootNode)
+    }
+
+    render() {
+      return (
+        <div ref={node => (this.rootNode = node)} className="tilt-root">
+          <div className="tilt-child">
+            <div {...this.props}></div>
+          </div>
+        </div>
+      )
+    }
+  }
+
+  var element = (
+    <div className="totally-centered">
+      <Tilt>
+        <div className="totally-centered">
+          vanilla-tilt.js
+        </div>
+      </Tilt>
+    </div>
+  )
+
+
+  // 这里要注意的是：ref = {} 在 DOM node 和 composite(custom) class component 是不一样的
+  // <div ref={}></div>
+  // <Tilt ref={}></Tilt>
+   // If we were to pass a ref to tilt, then what we're going to get is a reference to the instance. It would be the same thing as this. We'll get this as a reference in our ref on a composite component, but because we're putting it on the div, we get access to the DOM node.
+
+  ReactDOM.render(element, document.getElementById('root'))
+</script>

@@ -1,0 +1,64 @@
+<div id="root"></div>
+
+<script src="./react.development.js"></script>
+<script src="./react-dom.development.js"></script>
+<script src="./babel-standalone.js"></script>
+<script type="text/babel">
+  const rootElement = document.getElementById('root')
+
+  // ## use React.createELement API
+  // const element = React.createElement('div', {
+  //   className: 'container',
+  //
+  //   // 当你需要创建很多 `children` 的时候，用这种方式是几乎不可行的，所以 React 提供了 JSX
+  //   children: 'Hello World Form React.js'
+  // })
+
+
+  // ## use JSX, 但是这不是 Javascript code, 所以需要 babel 来做转换
+  // （一般情况下你使用build tool 例如：webpack 时候会加入babel，这里使用 standalone 版本）
+  // 这里注意：JS code 我们使用的 <script type="text/javascript">
+  // Babel 需要使用：<script type="text/babel">
+  // const element = <div className="container">Hello World</div>
+
+
+  // 问题来了，现在上面的 Hello World 是hardcode进来的，怎么让它从一个变量里面取？
+  // use interpolation `{ 括号里面是JS lang, any js code you want }`
+  // const content = 'Hello World'
+  // const element = <div className="container">{content}</div>
+
+
+  // class 也是动态的
+  // const content = 'Hello World'
+  // const myClassName = 'container'
+  // const element = <div className={myClassName}>{ (() => content)() }</div>
+
+
+  // 在React.createElement API 里我们知道，传的东西都会变成 `props`
+  // 也知道可以用 interpolation，所以这里我们去创建一个 “props” 然后结合 JSX 来使用
+  const content = 'Hello World'
+  const myClassName = 'container'
+  const props = {
+    className: 'container',
+    children: 'Hello World'
+  }
+  // const element = <div {...props} />
+
+  // 如果我想设置一个默认的 className, 如果有传进来那就把默认的覆盖掉
+  // const element = <div className="default-class" {...props} />
+
+  // 如果我想设置一个 className, 尽管有传别的 className 进来, 也不会被覆盖掉
+  // const element = <div {...props} className="default-class" />
+
+  // 同样的方式也可以用来处理 children
+  // const element = <div children="default children" {...props} />
+
+  // 同样的方式也可以用来处理 children
+  // const element = <div {...props} children="children can not be replace" />
+
+  // OR 同样的方式也可以用来处理 children
+  const element = <div {...props}>children can not be replace v2</div>
+
+  console.log(element)
+  ReactDOM.render(element, rootElement)
+</script>

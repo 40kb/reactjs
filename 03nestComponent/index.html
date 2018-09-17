@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="react.js"></script>
+<script src="react-dom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+</head>
+<body>
+
+  <script type="text/babel">
+
+    var Badges = React.createClass({
+      render: function() {
+        return <button className="btn btn-primary" type="button">
+            {this.props.title} <span className="badge">{this.props.number}</span>
+        </button>
+      }
+    });
+
+    var Form = React.createClass({
+      render: function() {
+        return <div>
+          <Badges title={this.props.title} number={this.props.number} />
+        </div>
+      }
+    })
+
+    var options = {
+      title: 'Sent',
+      number: 210
+    };
+
+    var element = React.createElement(Form, options);
+
+    ReactDOM.render(element, document.body);
+
+  </script>
+
+</body>
+</html>

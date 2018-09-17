@@ -1,0 +1,255 @@
+<div id="root"></div>
+
+<script src="./react.development.js"></script>
+<script src="./react-dom.development.js"></script>
+<script src="./babel-standalone.js"></script>
+<script type="text/babel">
+  // function StopWatch({lapse, running}) {
+  //   return (
+  //     <div>
+  //       <label>{lapse}ms</label>
+  //       <button>{running ? 'Stop' : 'Start'}</button>
+  //       <button>Clear</button>
+  //     </div>
+  //   )
+  // }
+  // var element = <StopWatch running={true} lapse={10} />
+
+
+  // 我们把上面的 StopWatch() move React.Component()
+  // class StopWatch extends React.Component {
+  //   render() {
+  //     // 在上面的 StopWatch() function, props 是我们通过参数传进去
+  //     // 在 React.Component 里我们可以直接从 this.props 里面拿到相应的参数
+  //     const {lapse, running} = this.props
+
+  //     // 下面的代码就是 StopWatch function body
+  //     return (
+  //       <div>
+  //         <label>{lapse}ms</label>
+  //         <button>{running ? 'Stop' : 'Start'}</button>
+  //         <button>Clear</button>
+  //       </div>
+  //     )
+  //   }
+  // }
+  // var element = <StopWatch running={true} lapse={10} />
+
+
+  // 通常都会有一个 init state (例如: <StopWatch running={false} lapse={0} />)
+  // 我们就以 running: false, lapse: 0 来做init state
+  // 下面我们创建一个初始的 state
+  // class StopWatch extends React.Component {
+  //   // create init state
+  //   state = {lapse: 0, running: false}
+  //   render() {
+
+  //     // init state 的值不从 this.props 里取，改从 state 取
+  //     // const {lapse, running} = this.props
+  //     const {lapse, running} = this.state
+
+  //     // 下面的代码就是 StopWatch function body
+  //     return (
+  //       <div>
+  //         <label>{lapse}ms</label>
+  //         <button>{running ? 'Stop' : 'Start'}</button>
+  //         <button>Clear</button>
+  //       </div>
+  //     )
+  //   }
+  // }
+
+  // // 不需要传 running={}, lapse={} 就有了 init state
+  // // (把上面的 state 改成 lapse: 100, running: true 试试看)
+  // var element = <StopWatch />
+
+
+  // 下面我们通过 event(user action) 去改变 state
+  // 和清空 state
+  // class StopWatch extends React.Component {
+  //   state = {lapse: 0, running: false}
+  //   handleRunClick = () => {
+  //     this.setState({ lapse: 10, running: true })
+  //   }
+  //   handleClearClick = () => {
+  //     this.setState({ lapse: 0, running: false })
+  //   }
+
+  //   render() {
+  //     const {lapse, running} = this.state
+
+  //     return (
+  //       <div>
+  //         <label>{lapse}ms</label>
+  //         <button onClick={this.handleRunClick}>{running ? 'Stop' : 'Start'}</button>
+  //         <button onClick={this.handleClearClick}>Clear</button>
+  //       </div>
+  //     )
+  //   }
+  // }
+  // var element = <StopWatch />
+
+
+  // 点击开始后，我们让它自动去计时
+  // class StopWatch extends React.Component {
+  //   state = {lapse: 0, running: false}
+
+  //   handleRunClick = () => {
+  //     const startTime = Date.now() - this.state.lapse
+  //     setInterval(() => {
+  //       this.setState({ lapse: Date.now() - startTime })
+  //     })
+  //     this.setState({ running: true })
+  //   }
+
+  //   handleClearClick = () => {
+  //     this.setState({ lapse: 0, running: false })
+  //   }
+
+  //   render() {
+  //     const {lapse, running} = this.state
+
+  //     return (
+  //       <div>
+  //         <label>{lapse}ms</label>
+  //         <button onClick={this.handleRunClick}>{running ? 'Stop' : 'Start'}</button>
+  //         <button onClick={this.handleClearClick}>Clear</button>
+  //       </div>
+  //     )
+  //   }
+  // }
+  // var element = <StopWatch />
+
+
+  // 让它可以点 start 同时也可以 stop
+  // class StopWatch extends React.Component {
+  //   state = {lapse: 0, running: false}
+
+  //   handleRunClick = () => {
+  //     this.setState(state => {
+  //       if (state.running) {
+  //         clearInterval(this.timer)
+  //       } else {
+  //         const startTime = Date.now() - this.state.lapse
+  //         this.timer = setInterval(() => {
+  //           this.setState({ lapse: Date.now() - startTime })
+  //         })
+  //       }
+
+  //       this.setState({ running: !state.running })
+  //     })
+  //   }
+
+  //   handleClearClick = () => {
+  //     this.setState({ lapse: 0, running: false })
+  //   }
+
+  //   render() {
+  //     const {lapse, running} = this.state
+
+  //     return (
+  //       <div>
+  //         <label>{lapse}ms</label>
+  //         <button onClick={this.handleRunClick}>{running ? 'Stop' : 'Start'}</button>
+  //         <button onClick={this.handleClearClick}>Clear</button>
+  //       </div>
+  //     )
+  //   }
+  // }
+  // var element = <StopWatch />
+
+
+  // 上面的可以start 和 stop, 但是clear有问题
+  // 因为我们创建了 timer, clear 的时候没有clear, 所以在 handleClearClick 要 clear timer
+  class StopWatch extends React.Component {
+    state = {lapse: 0, running: false}
+
+    handleRunClick = () => {
+      this.setState(state => {
+        if (state.running) {
+          clearInterval(this.timer)
+        } else {
+          const startTime = Date.now() - this.state.lapse
+          this.timer = setInterval(() => {
+            this.setState({ lapse: Date.now() - startTime })
+          })
+        }
+
+        this.setState({ running: !state.running })
+      })
+    }
+
+    handleClearClick = () => {
+      clearInterval(this.timer)
+      this.setState({ lapse: 0, running: false })
+    }
+
+    render() {
+      const {lapse, running} = this.state
+
+      return (
+        <div>
+          <label>{lapse}ms</label>
+          <button onClick={this.handleRunClick}>{running ? 'Stop' : 'Start'}</button>
+          <button onClick={this.handleClearClick}>Clear</button>
+        </div>
+      )
+    }
+  }
+  var element = <StopWatch />
+
+
+  // 上面的代码有一种情况会造成内存溢出
+  // 因为你创建了一个 timer, 如果你通过有种方式把 DOM node 移除掉！
+  // （注意这个时候timer还在，还好继续运行）
+  // 所以你需要在unmounted 的时候也要把 timer 清掉
+  class StopWatch extends React.Component {
+    state = {lapse: 0, running: false}
+
+    handleRunClick = () => {
+      this.setState(state => {
+        if (state.running) {
+          clearInterval(this.timer)
+        } else {
+          const startTime = Date.now() - this.state.lapse
+          this.timer = setInterval(() => {
+            this.setState({ lapse: Date.now() - startTime })
+          })
+        }
+
+        this.setState({ running: !state.running })
+      })
+    }
+
+    handleClearClick = () => {
+      clearInterval(this.timer)
+      this.setState({ lapse: 0, running: false })
+    }
+
+    // 在 unmount 的时候把 timer 清掉
+    componentWillUnmount() {
+      clearInterval(this.timer)
+    }
+
+    render() {
+      const {lapse, running} = this.state
+
+      return (
+        <div>
+          <label>{lapse}ms</label>
+          <button onClick={this.handleRunClick}>{running ? 'Stop' : 'Start'}</button>
+          <button onClick={this.handleClearClick}>Clear</button>
+        </div>
+      )
+    }
+  }
+  var element = <StopWatch />
+
+
+  ReactDOM.render(
+    element,
+    document.getElementById('root')
+  )
+
+
+</script>

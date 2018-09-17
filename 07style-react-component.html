@@ -1,0 +1,164 @@
+<div id="root"></div>
+
+<script src="./react.development.js"></script>
+<script src="./react-dom.development.js"></script>
+<script src="./babel-standalone.js"></script>
+
+<style>
+  .box {
+    border: 1px solid black;
+  }
+
+  .box--larger {
+    width: 240px;
+    height: 240px;
+  }
+
+  .box--medium {
+    width: 120px;
+    height: 120px;
+  }
+
+  .box--small {
+    width: 60px;
+    height: 60px;
+  }
+</style>
+
+<script type="text/babel">
+  const rootElement = document.getElementById('root')
+
+  // 想让 "box" have a padding-left 20px
+  // HTML 我们使用string <div style="padding-left: 20px;">box</div>
+  // in JSX 我们使用 Object  <div style={{paddingLeft: '20px'}}>box</div>
+  // HTML 使用 '-', JSX 使用 camelcase
+  // JSX 中，值默认为px，所以你可以省略 'px' 写成 <div style={{paddingLeft: 20}}></div>
+  var element = (
+    <div>
+      <div style={{paddingLeft: '20px'}}>box</div>
+    </div>
+  )
+
+
+  // 我们还想给它 className
+  var element = (
+    <div>
+      <div className="box box--small" style={{paddingLeft: '20px'}}>box</div>
+    </div>
+  )
+
+
+  // 我们可以把 className、style props extract as props variable
+  // 结果是一样的
+  var props = {
+    className: "box box--small",
+    style: {paddingLeft: '20px'}
+  }
+  var element = (
+    <div>
+      <div {...props}>box</div>
+    </div>
+  )
+
+
+  // let extract this as Function Component
+  function Box(props) {
+    return (
+      <div
+        className="box box--small"
+        style={{paddingLeft: 20}}
+        {...props}
+      />
+    )
+  }
+
+  var element = (
+    <div>
+      {/* 同时我们给它style, 但是我们Box() 里给它的样式就没了！被 这里传进去的 style 覆盖掉 */}
+      <Box style={{backgroundColor: 'lightblue'}}>small box</Box>
+    </div>
+  )
+
+
+  // 怎么让它不被覆盖掉呢？我们在 Box Function component destructure props
+  function Box({style, ...rest}) {
+    return (
+      <div
+        className="box box--small"
+        style={{paddingLeft: 20, ...style}}
+        {...rest}
+      />
+    )
+  }
+  var element = (
+    <div>
+      {/* 同时我们给它style, 传进去的 style 和 Box() 给的style合并一起（做到了扩展, merged style） */}
+      <Box style={{backgroundColor: 'lightblue'}}>small box</Box>
+    </div>
+  )
+
+
+  // 我们用同样的方式来处理 className
+  function Box({style, className = '', ...rest}) {
+    return (
+      <div
+        className={`box ${className}`}
+        style={{paddingLeft: 20, ...style}}
+        {...rest}
+      />
+    )
+  }
+  var element = (
+    <div>
+      {/* 注意，如果我们不给 className 的时候，在DOM里面会渲染 undefined class */}
+      {/* 所以，我们在 Box() 里给className 一个默认值  className = '' */}
+      <Box className="box--small" style={{backgroundColor: 'lightblue'}}>small box</Box>
+    </div>
+  )
+
+
+  // 现在我们来创建几个不同类型的 "Box"
+  function Box({style, className = '', ...rest}) {
+    return (
+      <div
+        className={`box ${className}`}
+        style={{paddingLeft: 20, ...style}}
+        {...rest}
+      />
+    )
+  }
+  var element = (
+    <div>
+      <Box className="box--small" style={{backgroundColor: 'lightblue'}}>small box</Box>
+      <Box className="box--medium" style={{backgroundColor: 'blue'}}>medium box</Box>
+      <Box className="box--larger" style={{backgroundColor: 'red'}}>larger box</Box>
+    </div>
+  )
+
+
+  // 但是，用className来控制不同类型的box 好像有点奇怪，我们能不能告诉 Box() 我们需要什么类型的Box
+  // 让 Box() 来处理，这样就不需要用 className 来处理
+  // 我们新增一个 size props
+  function Box({style, size, className = '', ...rest}) {
+    const sizeClassName = size ? `box--${size}` : ''
+    return (
+      <div
+        className={`box ${className} ${sizeClassName}`}
+        style={{paddingLeft: 20, ...style}}
+        {...rest}
+      />
+    )
+  }
+  var element = (
+    <div>
+      <Box size="small" style={{backgroundColor: 'lightblue'}}>small box</Box>
+      <Box size="medium" style={{backgroundColor: 'blue'}}>medium box</Box>
+      <Box size="larger" style={{backgroundColor: 'red'}}>larger box</Box>
+    </div>
+  )
+
+  // 最后需要注意的是：使用 inline style 的时候，React 不会帮你处理 vendor prefix!!!
+  // 关于这方面的你可以了解一下：styled components、emotion、glamorous
+
+  ReactDOM.render(element, rootElement)
+</script>

@@ -1,0 +1,51 @@
+<div id="root"></div>
+
+<script src="./react.development.js"></script>
+<script src="./react-dom.development.js"></script>
+<script src="./babel-standalone.js"></script>
+<script type="text/babel">
+  const rootElement = document.getElementById('root')
+
+  // const time = new Date().toLocaleTimeString()
+  // const element = <div>It is {time}</div>
+  // ReactDOM.render(element, rootElement)
+
+
+  // 上面这样需要手动刷新才可以看到新的时间
+  // 我想让它每隔一段时间自动去更新一下时间：
+  // function tick() {
+  //   const time = new Date().toLocaleTimeString()
+  //   const element = <div>It is {time}</div>
+  //   ReactDOM.render(element, rootElement)
+  // }
+  // tick()
+  // setInterval(tick, 1000)
+
+
+  // 打开dev tool （每次更新）观察一下 DOM 的变化
+  // function tick() {
+  //   const time = new Date().toLocaleTimeString()
+  //   const element = <div>It is <input value={time} /><input value={time} /></div>
+  //   ReactDOM.render(element, rootElement)
+  // }
+  // tick()
+  // setInterval(tick, 1000)
+
+  // 现在换成 JS 的方式再观察 DOM 的变化，对比一下有什么区别
+  function tick() {
+    const time = new Date().toLocaleTimeString()
+    const element = `
+      <div>
+        It is
+        <input value="${time}" />
+        <input value="${time}" />
+      </div>
+    `
+    // ReactDOM.render(element, rootElement) // 每次更新不会把DOM node删除再重新创建，只会更新内容需要更新的部分 （性能更好）
+    rootElement.innerHTML = element // 每次更新都会把DOM node删除再重新创建 （操作DOM会严重影响性能）
+  }
+  tick()
+  setInterval(tick, 1000)
+
+
+</script>
